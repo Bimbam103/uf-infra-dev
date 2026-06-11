@@ -1,25 +1,37 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
+from app import db
 from app.models import BienImmobilier
-# On importe nos fonctions d'analyse
 from data_analysis.clean_data import generer_et_analyser_donnees, predire_prix
 
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    liste_biens = BienImmobilier.query.all()
-    return render_template('index.html', biens=liste_biens)
+    # On récupère les filtres saisis par l'utilisateur s'ils existent
+    ville_recherche = request.args.get('ville', '').strip()
+    type_recherche = request.args.get('type_bien', '')
+
+    # Requête de base : on prend tous les biens
+    query = BienImmobilier.query
+
+    # Si l'utilisateur a écrit une ville, on filtre (sans distinction de majuscules)
+    if ville_recherche:
+        query = query.filter(BienImmobilier.ville.ilike(f"%{ville_recherche}%"))
+    
+    # Si l'utilisateur a choisi un type spécifique
+    if type_recherche:
+        query = query.filter_by(type_bien=type_recherche)
+
+    liste_biens = query.all()
+    return render_template('index.html', biens=liste_biens, ville_recherche=ville_recherche, type_recherche=type_recherche)
 
 @main_bp.route('/stats', methods=['GET', 'POST'])
 def stats():
-    # On génère les analyses Pandas en temps réel
     stats_ville, stats_type = generer_et_analyser_donnees()
-    
     prix_estime = None
     surface_saisie = None
     ville_saisie = None
     
-    # Si l'utilisateur utilise le formulaire de prédiction d'IA
     if request.method == 'POST':
         surface_saisie = int(request.form.get('surface', 0))
         ville_saisie = request.form.get('ville', 'Aix-en-Provence')
@@ -34,3 +46,26 @@ def stats():
         surface_saisie=surface_saisie,
         ville_saisie=ville_saisie
     )
+
+@main_bp.route('/ajouter-bien', methods=['GET', 'POST'])
+def ajouter_bien():
+    if request.method == 'POST':
+        # Extraction des données du formulaire HTML
+        nouveau_bien = BienImmobilier(
+            titre=request.form.get('titre'),
+            type_bien=request.form.get('type_bien'),
+            statut="A vendre",
+            prix=int(request.form.get('prix')),
+            surface_m2=int(request.form.get('surface')),
+            ville=request.form.get('ville'),
+            id_commercial=1 # Lié temporairement à Jean Dupont (ID 1)
+        )
+        
+        # Sauvegarde dans la base de données SQL
+        db.session.add(nouveau_bien)
+        db.session.commit()
+        
+        # Retour à l'accueil pour voir le résultat
+        return redirect(url_for('main.index'))
+        
+    return render_template('ajouter_bien.html')

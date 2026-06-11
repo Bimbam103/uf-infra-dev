@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription - Ymmo{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4 fw-bold text-dark">Créer un compte Client</h2>
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" name="prenom" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nom</label>
+                            <input type="text" name="nom" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Adresse Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="ex: client@gmail.com" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-lg mb-3">S'inscrire</button>
+                    <p class="text-center mb-0 small text-muted">Déjà un compte ? <a href="{{ url_for('auth.login') }}">Connectez-vous ici</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

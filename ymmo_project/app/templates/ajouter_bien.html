@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Ajouter un bien - Ymmo{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 p-4">
+            <h2 class="fw-bold text-dark mb-4"><i class="bi bi-house-add text-success"></i> Ajouter un nouveau mandat</h2>
+            
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Titre de l'annonce</label>
+                    <input type="text" name="titre" class="form-control" placeholder="ex: Maison contemporaine avec piscine" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Type de bien</label>
+                        <select name="type_bien" class="form-select">
+                            <option value="Résidentiel">Résidentiel</option>
+                            <option value="Professionnel">Professionnel</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Ville</label>
+                        <input type="text" name="ville" class="form-control" placeholder="ex: Aix-en-Provence" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Surface (en m²)</label>
+                        <input type="number" name="surface" class="form-control" placeholder="ex: 90" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Prix (€)</label>
+                        <input type="number" name="prix" class="form-control" placeholder="ex: 320000" required>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">Annuler</a>
+                    <button type="submit" class="btn btn-success px-4">Publier le bien</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,11 +6,13 @@
 <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
     <div class="container-fluid py-5 text-center">
         <h1 class="display-5 fw-bold text-dark">Trouvez votre futur bien immobilier</h1>
-        <p class="col-md-8 fs-4 mx-auto text-muted">Avec Ymmo, connectez-vous directement à notre réseau de 12 agences partout en France pour vos projets résidentiels et professionnels.</p>
-        
+        <p class="col-md-8 fs-4 mx-auto text-muted">Avec Ymmo, connectez-vous directement à notre réseau de 12 agences
+            partout en France pour vos projets résidentiels et professionnels.</p>
+
         <form class="row g-3 justify-content-center mt-4">
             <div class="col-md-4">
-                <input type="text" class="form-control form-control-lg" placeholder="Ville ou Code Postal (ex: Aix-en-Provence)...">
+                <input type="text" class="form-control form-control-lg"
+                    placeholder="Ville ou Code Postal (ex: Aix-en-Provence)...">
             </div>
             <div class="col-md-3">
                 <select class="form-select form-control-lg">
@@ -26,13 +28,19 @@
 </div>
 
 <div class="container my-5 px-0">
-    <h2 class="mb-4 fw-bold text-dark">Nos dernières opportunités</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark mb-0">Nos dernières opportunités</h2>
+        {% if session.get('user_role') in ['Direction', 'Commercial'] %}
+        <a href="{{ url_for('main.ajouter_bien') }}" class="btn btn-success"><i class="bi bi-plus-circle"></i> Ajouter un bien</a>
+            {% endif %}
+    </div>
     <div class="row">
         {% for bien in biens %}
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
-                    <span class="badge {% if bien.type_bien == 'Résidentiel' %}bg-primary{% else %}bg-info{% endif %} mb-2">
+                    <span
+                        class="badge {% if bien.type_bien == 'Résidentiel' %}bg-primary{% else %}bg-info{% endif %} mb-2">
                         {{ bien.type_bien }}
                     </span>
                     <h5 class="card-title fw-bold text-dark">{{ bien.titre }}</h5>
@@ -57,14 +65,16 @@
     <div class="col-md-6 mb-3">
         <div class="h-100 p-5 text-white bg-success rounded-3 shadow-sm">
             <h2>Analyse de Marché Intégrée</h2>
-            <p>Notre plateforme utilise des algorithmes d'analyse de données pour estimer au plus juste la valeur des biens en fonction des tendances du marché actuel.</p>
+            <p>Notre plateforme utilise des algorithmes d'analyse de données pour estimer au plus juste la valeur des
+                biens en fonction des tendances du marché actuel.</p>
             <button class="btn btn-outline-light" type="button">Voir les tendances</button>
         </div>
     </div>
     <div class="col-md-6 mb-3">
         <div class="h-100 p-5 bg-white border rounded-3 shadow-sm">
             <h2>Espace Collaboratif</h2>
-            <p>Commerciaux du groupe Ymmo ? Connectez-vous pour gérer vos mandats, suivre vos clients et analyser l'activité de votre agence locale.</p>
+            <p>Commerciaux du groupe Ymmo ? Connectez-vous pour gérer vos mandats, suivre vos clients et analyser
+                l'activité de votre agence locale.</p>
             <button class="btn btn-outline-dark" type="button">Accéder à l'intranet</button>
         </div>
     </div>
