@@ -8,7 +8,7 @@
         <h1 class="display-5 fw-bold text-dark">Trouvez votre futur bien immobilier</h1>
         <p class="col-md-8 fs-4 mx-auto text-muted">Avec Ymmo, connectez-vous directement à notre réseau de 12 agences partout en France pour vos projets résidentiels et professionnels.</p>
 
-        <form class="row g-3 justify-content-center mt-4" method="GET" action="{{ url_for('main.index') }}">
+        <form class="row g-3 justify-content-center mt-4" method="GET" action="{{ url_for('main.acheter_louer') }}">
             <div class="col-md-4">
                 <input type="text" name="ville" class="form-control form-control-lg" placeholder="Ville (ex: Aix-en-Provence, Paris)..." value="{{ ville_recherche if ville_recherche }}">
             </div>
@@ -53,7 +53,7 @@
                     <p class="card-text text-muted">Surface : <strong>{{ bien.surface_m2 }} m²</strong></p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <span class="text-success fw-bold fs-5">{{ bien.prix }} €</span>
-                        <a href="#" class="btn btn-outline-success btn-sm">Voir le bien</a>
+                        <a href="{{ url_for('main.voir_bien', id_bien=bien.id_bien) }}" class="btn btn-outline-success btn-sm">Voir le bien</a>
                     </div>
                 </div>
             </div>
