@@ -6,22 +6,21 @@
 <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
     <div class="container-fluid py-5 text-center">
         <h1 class="display-5 fw-bold text-dark">Trouvez votre futur bien immobilier</h1>
-        <p class="col-md-8 fs-4 mx-auto text-muted">Avec Ymmo, connectez-vous directement à notre réseau de 12 agences
-            partout en France pour vos projets résidentiels et professionnels.</p>
+        <p class="col-md-8 fs-4 mx-auto text-muted">Avec Ymmo, connectez-vous directement à notre réseau de 12 agences partout en France pour vos projets résidentiels et professionnels.</p>
 
-        <form class="row g-3 justify-content-center mt-4">
+        <form class="row g-3 justify-content-center mt-4" method="GET" action="{{ url_for('main.index') }}">
             <div class="col-md-4">
-                <input type="text" class="form-control form-control-lg"
-                    placeholder="Ville ou Code Postal (ex: Aix-en-Provence)...">
+                <input type="text" name="ville" class="form-control form-control-lg" placeholder="Ville (ex: Aix-en-Provence, Paris)..." value="{{ ville_recherche if ville_recherche }}">
             </div>
             <div class="col-md-3">
-                <select class="form-select form-control-lg">
-                    <option value="Résidentiel">Résidentiel (Maison, Appartement)</option>
-                    <option value="Professionnel">Professionnel (Bureaux, Local)</option>
+                <select name="type_bien" class="form-select form-control-lg">
+                    <option value="">Tous les types</option>
+                    <option value="Résidentiel" {% if type_recherche == 'Résidentiel' %}selected{% endif %}>Résidentiel (Maison, Appartement)</option>
+                    <option value="Professionnel" {% if type_recherche == 'Professionnel' %}selected{% endif %}>Professionnel (Bureaux, Local)</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-success btn-lg w-100">Rechercher</button>
+                <button type="submit" class="btn btn-success btn-lg w-100"><i class="bi bi-search"></i> Rechercher</button>
             </div>
         </form>
     </div>
@@ -31,16 +30,22 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-dark mb-0">Nos dernières opportunités</h2>
         {% if session.get('user_role') in ['Direction', 'Commercial'] %}
-        <a href="{{ url_for('main.ajouter_bien') }}" class="btn btn-success"><i class="bi bi-plus-circle"></i> Ajouter un bien</a>
-            {% endif %}
+            <a href="{{ url_for('main.ajouter_bien') }}" class="btn btn-success"><i class="bi bi-plus-circle"></i> Ajouter un bien</a>
+        {% endif %}
     </div>
+    
     <div class="row">
         {% for bien in biens %}
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm border-0">
+                {% if bien.type_bien == 'Résidentiel' %}
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Maison résidentielle" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Bureaux professionnels" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                
                 <div class="card-body">
-                    <span
-                        class="badge {% if bien.type_bien == 'Résidentiel' %}bg-primary{% else %}bg-info{% endif %} mb-2">
+                    <span class="badge {% if bien.type_bien == 'Résidentiel' %}bg-primary{% else %}bg-info{% endif %} mb-2">
                         {{ bien.type_bien }}
                     </span>
                     <h5 class="card-title fw-bold text-dark">{{ bien.titre }}</h5>
@@ -55,7 +60,7 @@
         </div>
         {% else %}
         <div class="col-12 text-center py-4 bg-white rounded-3 border">
-            <p class="text-muted mb-0">Aucun bien immobilier n'est disponible pour le moment.</p>
+            <p class="text-muted mb-0">Aucun bien immobilier ne correspond à vos critères de recherche.</p>
         </div>
         {% endfor %}
     </div>
@@ -65,17 +70,19 @@
     <div class="col-md-6 mb-3">
         <div class="h-100 p-5 text-white bg-success rounded-3 shadow-sm">
             <h2>Analyse de Marché Intégrée</h2>
-            <p>Notre plateforme utilise des algorithmes d'analyse de données pour estimer au plus juste la valeur des
-                biens en fonction des tendances du marché actuel.</p>
-            <button class="btn btn-outline-light" type="button">Voir les tendances</button>
+            <p>Notre plateforme utilise des algorithmes d'analyse de données pour estimer au plus juste la valeur des biens en fonction des tendances du marché actuel.</p>
+            <a href="{{ url_for('main.stats') }}" class="btn btn-outline-light">Voir les tendances</a>
         </div>
     </div>
     <div class="col-md-6 mb-3">
         <div class="h-100 p-5 bg-white border rounded-3 shadow-sm">
             <h2>Espace Collaboratif</h2>
-            <p>Commerciaux du groupe Ymmo ? Connectez-vous pour gérer vos mandats, suivre vos clients et analyser
-                l'activité de votre agence locale.</p>
-            <button class="btn btn-outline-dark" type="button">Accéder à l'intranet</button>
+            <p>Commerciaux du groupe Ymmo ? Connectez-vous pour gérer vos mandats, suivre vos clients et analyser l'activité de votre agence locale.</p>
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('main.index') }}" class="btn btn-outline-dark disabled">Accès Intranet Actif</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-dark">Accéder à l'intranet</a>
+            {% endif %}
         </div>
     </div>
 </div>
