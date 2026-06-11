@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Catalogue Immobilier - Ymmo{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="fw-bold text-dark">Toutes nos opportunités immobilières</h1>
+        <p class="text-muted">Découvrez les mandats exclusifs ajoutés par nos agents certifiés Ymmo.</p>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 p-4 mb-5 bg-white">
+    <form class="row g-3 justify-content-center" method="GET" action="{{ url_for('main.acheter_louer') }}">
+        <div class="col-md-5">
+            <label class="form-label fw-semibold">Où cherchez-vous ?</label>
+            <input type="text" name="ville" class="form-control" placeholder="Entrez une ville..." value="{{ ville_recherche if ville_recherche }}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Type de propriété</label>
+            <select name="type_bien" class="form-select">
+                <option value="">Tous les types</option>
+                <option value="Résidentiel" {% if type_recherche == 'Résidentiel' %}selected{% endif %}>Résidentiel (Maison, Appartement)</option>
+                <option value="Professionnel" {% if type_recherche == 'Professionnel' %}selected{% endif %}>Professionnel (Bureaux, Local)</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-success w-100"><i class="bi bi-filter"></i> Filtrer les biens</button>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    {% for bien in biens %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm border-0">
+            {% if bien.type_bien == 'Résidentiel' %}
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Maison" style="height: 200px; object-fit: cover;">
+            {% else %}
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Bureaux" style="height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <span class="badge {% if bien.type_bien == 'Résidentiel' %}bg-primary{% else %}bg-info{% endif %} mb-2">{{ bien.type_bien }}</span>
+                <h5 class="card-title fw-bold text-dark">{{ bien.titre }}</h5>
+                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> {{ bien.ville }}</p>
+                <p class="card-text text-muted">Surface : <strong>{{ bien.surface_m2 }} m²</strong></p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <span class="text-success fw-bold fs-5">{{ bien.prix }} €</span>
+                    <a href="{{ url_for('main.voir_bien', id_bien=bien.id_bien) }}" class="btn btn-outline-success btn-sm">Voir le bien</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center py-5 bg-white rounded-3 border">
+        <i class="bi bi-house-exclamation text-muted fs-1"></i>
+        <p class="text-muted mt-2 mb-0">Aucun mandat ne correspond à vos critères pour le moment.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

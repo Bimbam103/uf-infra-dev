@@ -69,3 +69,25 @@ def ajouter_bien():
         return redirect(url_for('main.index'))
         
     return render_template('ajouter_bien.html')
+
+@main_bp.route('/acheter-louer')
+def acheter_louer():
+    # Page catalogue qui récupère tous les biens de la base
+    ville_recherche = request.args.get('ville', '').strip()
+    type_recherche = request.args.get('type_bien', '')
+
+    query = BienImmobilier.query
+
+    if ville_recherche:
+        query = query.filter(BienImmobilier.ville.ilike(f"%{ville_recherche}%"))
+    if type_recherche:
+        query = query.filter_by(type_bien=type_recherche)
+
+    liste_biens = query.all()
+    return render_template('acheter_louer.html', biens=liste_biens, ville_recherche=ville_recherche, type_recherche=type_recherche)
+
+@main_bp.route('/bien/<int:id_bien>')
+def voir_bien(id_bien):
+    # Récupère le bien spécifique ou renvoie une erreur 404 si l'ID n'existe pas
+    bien = BienImmobilier.query.get_or_404(id_bien)
+    return render_template('voir_bien.html', bien=bien)
