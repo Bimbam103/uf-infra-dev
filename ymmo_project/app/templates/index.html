@@ -25,6 +25,34 @@
     </div>
 </div>
 
+<div class="container my-5 px-0">
+    <h2 class="mb-4 fw-bold text-dark">Nos dernières opportunités</h2>
+    <div class="row">
+        {% for bien in biens %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <span class="badge {% if bien.type_bien == 'Résidentiel' %}bg-primary{% else %}bg-info{% endif %} mb-2">
+                        {{ bien.type_bien }}
+                    </span>
+                    <h5 class="card-title fw-bold text-dark">{{ bien.titre }}</h5>
+                    <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> {{ bien.ville }}</p>
+                    <p class="card-text text-muted">Surface : <strong>{{ bien.surface_m2 }} m²</strong></p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="text-success fw-bold fs-5">{{ bien.prix }} €</span>
+                        <a href="#" class="btn btn-outline-success btn-sm">Voir le bien</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-4 bg-white rounded-3 border">
+            <p class="text-muted mb-0">Aucun bien immobilier n'est disponible pour le moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 <div class="row align-items-md-stretch mt-4">
     <div class="col-md-6 mb-3">
         <div class="h-100 p-5 text-white bg-success rounded-3 shadow-sm">

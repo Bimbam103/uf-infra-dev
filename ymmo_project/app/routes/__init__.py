@@ -1,3 +1,5 @@
-from flask import Blueprint
+from .auth import auth_bp
+from .main import main_bp
 
-# Packages pour rendre le module route importable.
+# Ce package expose les blueprints disponibles sans les enregistrer.
+# L'enregistrement se fait dans create_app() pour éviter les dépendances circulaires.

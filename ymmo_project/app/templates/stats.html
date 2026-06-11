@@ -1,6 +1,75 @@
 {% extends 'base.html' %}
-{% block title %}Statistiques{% endblock %}
+
+{% block title %}Analyses & IA - Ymmo{% endblock %}
+
 {% block content %}
-  <h1>Rapports statistiques</h1>
-  <p>Présentez vos graphiques et données ici.</p>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1 class="fw-bold text-dark">📊 Analyse du Marché & Estimation IA</h1>
+            <p class="text-muted fs-5">Données calculées en temps réel par notre algorithme d'analyse basé sur l'historique du groupe.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-3 text-success"><i class="bi bi-graph-up"></i> Prix moyen au m² par Ville</h4>
+                    <table class="table table-hover mt-3">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Ville</th>
+                                <th>Prix moyen au m²</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ville, prix in stats_ville.items() %}
+                            <tr>
+                                <td class="fw-bold">{{ ville }}</td>
+                                <td class="text-success fw-bold">{{ prix }} € / m²</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 bg-light h-100">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-3 text-dark"><i class="bi bi-cpu"></i> Estimateur de Prix (Mini-IA)</h4>
+                    <p class="text-muted small">Indiquez les caractéristiques du bien pour calculer sa valeur théorique sur le marché.</p>
+                    
+                    <form method="POST" action="{{ url_for('main.stats') }}">
+                        <div class="mb-3">
+                            <label class="form-label">Surface (en m²)</label>
+                            <input type="number" name="surface" class="form-control" placeholder="ex: 75" required value="{{ surface_saisie or '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ville</label>
+                            <select name="ville" class="form-select">
+                                <option value="Aix-en-Provence" {% if ville_saisie == 'Aix-en-Provence' %}selected{% endif %}>Aix-en-Provence</option>
+                                <option value="Marseille" {% if ville_saisie == 'Marseille' %}selected{% endif %}>Marseille</option>
+                                <option value="Paris" {% if ville_saisie == 'Paris' %}selected{% endif %}>Paris</option>
+                                <option value="Lyon" {% if ville_saisie == 'Lyon' %}selected{% endif %}>Lyon</option>
+                                <option value="Nice" {% if ville_saisie == 'Nice' %}selected{% endif %}>Nice</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Estimer la valeur du bien</button>
+                    </form>
+
+                    {% if prix_estime %}
+                    <div class="alert alert-success mt-4 text-center border-0 shadow-sm">
+                        <h5 class="mb-1">Estimation Ymmo Predict :</h5>
+                        <span class="fs-3 fw-bold">{{ prix_estime }} €</span>
+                        <p class="small text-muted mb-0 mt-1">Pour un bien de {{ surface_saisie }} m² à {{ ville_saisie }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
