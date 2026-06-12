@@ -47,6 +47,21 @@ python -m pip install -r requirements.txt
 with app.app_context(): db.create_all()"
 ```
 
+5. installer flask
+```powershell
+pip install flask
+```
+
+6. installer flask SQLAlchemy
+```powershell
+pip install flask_sqlalchemy
+```
+
+7. installer pandas
+```powershell
+pip install pandas
+```
+
 ## Technologies utilisées (résumé)
 
 - **Python** : langage principal du projet.
